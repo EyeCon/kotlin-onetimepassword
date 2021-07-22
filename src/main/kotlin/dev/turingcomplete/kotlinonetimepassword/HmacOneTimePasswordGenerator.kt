@@ -69,26 +69,26 @@ open class HmacOneTimePasswordGenerator(private val secret: ByteArray,
     // step binary value (0x7F = 0111 1111).
     //
     // Ongoing example:
-    // The value at index 0 is 107, which has a MSB of 0. So nothing must be done
+    // The value at index 0 is 107, which has an MSB of 0. So nothing must be done
     // and the binary value remains the same.
     binary.put(0, binary.get(0).and(0x7F))
 
     // The resulting integer value of the code must have at most the required code
-    // digits. Therefore the binary value is reduced by calculating the modulo
+    // digits. Therefore, the binary value is reduced by calculating the modulo
     // 10 ^ codeDigits.
     //
-    // On going example:
+    // Ongoing example:
     // binary = [107, 104, -30, -14] = 137359152
     // codeDigits = 6
     // codeInt = 137359152 % 10^6 = 35954
     val codeInt = binary.int.rem(10.0.pow(config.codeDigits).toInt())
     
     // The integer code variable may contain a value with fewer digits than the
-    // required code digits. Therefore the final code value is filled with zeros
+    // required code digits. Therefore, the final code value is filled with zeros
     // on the left, till the code digits requirement is fulfilled.
     //
     // Ongoing example:
-    // The current value of the 'oneTimePassword' variable has 5 digits. Therefore
+    // The current value of the 'oneTimePassword' variable has 5 digits. Therefore,
     // the resulting code is filled with one 0 at the beginning, to meet the 6
     // digits requirement.
     var codeString = codeInt.toString()

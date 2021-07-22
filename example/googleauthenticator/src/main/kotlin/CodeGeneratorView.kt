@@ -90,7 +90,7 @@ class CodeGeneratorView : View() {
 
     root.add(Label("Code validity:"), 0, ++row, 1, 1)
     root.add(codeValidlyIndicator, 1, row, 1, 1)
-    val codeValidlyUpdate = Timeline(KeyFrame(Duration.seconds(1.0), EventHandler<ActionEvent?> {
+    val codeValidlyUpdate = Timeline(KeyFrame(Duration.seconds(1.0), {
       generateGoogleAuthenticatorCode()
     }))
     codeValidlyUpdate.cycleCount = Timeline.INDEFINITE
@@ -123,7 +123,7 @@ class CodeGeneratorView : View() {
 
     // See https://github.com/google/google-authenticator/wiki/Key-Uri-Format
     val qrText = "otpauth://totp/me@company.com:?secret=$base32secret&issuer=GoogleAuthenticatorExample"
-    val qurCodeMatrix = QRCodeWriter().encode(qrText, BarcodeFormat.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE,
+    val qrCodeMatrix = QRCodeWriter().encode(qrText, BarcodeFormat.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE,
                                               mapOf(Pair(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L)))
 
     val graphics: GraphicsContext = base32encodedSecretQrCode.graphicsContext2D
@@ -134,9 +134,9 @@ class CodeGeneratorView : View() {
 
     // QR code
     graphics.fill = javafx.scene.paint.Color.BLACK
-    for (i in 0 until qurCodeMatrix.width) {
-      for (j in 0 until qurCodeMatrix.height) {
-        if (qurCodeMatrix[i, j]) {
+    for (i in 0 until qrCodeMatrix.width) {
+      for (j in 0 until qrCodeMatrix.height) {
+        if (qrCodeMatrix[i, j]) {
           graphics.fillRect(i.toDouble(), j.toDouble(), 1.0, 1.0)
         }
       }
