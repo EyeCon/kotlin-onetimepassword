@@ -40,7 +40,7 @@ class CodeGeneratorView : View() {
 
   private var plainTextSecret = "Secret1234".toByteArray(StandardCharsets.UTF_8)
 
-  private val plainTextSecretTextField = TextField(plainTextSecret.toHex())
+  private val plainTextSecretTextField = TextField(plainTextSecret.toHex()).apply { isEditable = false }
   private val base32encodedSecretTextField = TextField().apply { isEditable = false }
   private val base32encodedSecretQrCode = Canvas(QR_CODE_SIZE.toDouble(), QR_CODE_SIZE.toDouble())
   private val codeTextField = TextField().apply { isEditable = false }
