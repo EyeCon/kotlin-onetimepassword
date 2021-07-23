@@ -26,7 +26,7 @@ open class TimeBasedOneTimePasswordGenerator(private val secret: ByteArray, priv
    * steps is calculated. The default value is the current system time from
    * [System.currentTimeMillis].
    */
-  fun counter(timestamp: Long = System.currentTimeMillis()):Long = if (config.timeStep == 0L) {
+  fun counter(timestamp: Long = System.currentTimeMillis()): Long = if (config.timeStep == 0L) {
     0 // To avoid a divide by zero exception
   }
   else {
@@ -35,8 +35,8 @@ open class TimeBasedOneTimePasswordGenerator(private val secret: ByteArray, priv
       .toLong()
   }
 
-  fun counter(date: Date):Long = counter(date.time)
-  fun counter(instant: Instant):Long = counter(instant.toEpochMilli())
+  fun counter(date: Date): Long = counter(date.time)
+  fun counter(instant: Instant): Long = counter(instant.toEpochMilli())
 
   /**
    * Calculates the start of the given time slot.
@@ -46,7 +46,7 @@ open class TimeBasedOneTimePasswordGenerator(private val secret: ByteArray, priv
    * @param counter The counter representing the time slot.
    * @return The Unix timestamp where the given time slot starts.
    */
-  fun timeslotStart(counter:Long):Long {
+  fun timeslotStart(counter: Long): Long {
     val timeStepMillis = TimeUnit.MILLISECONDS.convert(config.timeStep, config.timeStepUnit).toDouble()
     return (counter * timeStepMillis).toLong()
   }
