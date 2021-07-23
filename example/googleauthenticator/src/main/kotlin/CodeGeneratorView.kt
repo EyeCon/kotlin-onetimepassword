@@ -17,6 +17,16 @@ import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 
 
+class EasyGridPane : GridPane() {
+  private var _row = 0
+  fun row(node1: javafx.scene.Node? = null, node2: javafx.scene.Node? = null, colspan: Int = 1, rowspan: Int = 1) {
+    if (node1 != null) add(node1, 0, _row, colspan, rowspan)
+    if (node2 != null) add(node2, 1, _row, colspan, rowspan)
+    _row++
+  }
+}
+
+
 class CodeGeneratorView : View() {
   // -- Companion Object -------------------------------------------------------------------------------------------- //
 
@@ -26,7 +36,7 @@ class CodeGeneratorView : View() {
 
   // -- Properties -------------------------------------------------------------------------------------------------- //
 
-  override val root = GridPane()
+  override val root = EasyGridPane()
 
   private var plainTextSecret = "Secret1234".toByteArray(StandardCharsets.UTF_8)
 
@@ -47,11 +57,9 @@ class CodeGeneratorView : View() {
     root.hgap = 4.0
     root.vgap = 4.0
 
-    var row = 0
-    root.add(Label("Must have 10 characters to work correctly with most generator apps."), 0, row, 2, 1)
-
-    root.add(Label("Plain text secret (in hex):"), 0, ++row, 1, 1)
-    root.add(plainTextSecretTextField, 1, row, 1, 1)
+//    var row = 0
+    root.row(Label("Must have 10 characters to work correctly with most generator apps."), rowspan = 1, colspan = 2)
+    root.row(Label("Plain text secret (in hex):"), plainTextSecretTextField)
     plainTextSecretTextField.textProperty().addListener { _, _, newValue ->
       if (newValue.isBlank()) {
         return@addListener
@@ -62,16 +70,15 @@ class CodeGeneratorView : View() {
 
     val addSeparator : () -> Separator = {
       val separator = Separator()
-      root.add(separator, 0, ++row, 2, 1)
+      root.row(separator, colspan = 2, rowspan = 1)
       GridPane.setMargin(separator, Insets(8.0, 0.0, 8.0, 0.0))
       separator
     }
     addSeparator()
 
-    root.add(Label("This is the secret that must be used in the generator apps."), 0, ++row, 2, 1)
-    root.add(Label("Base32-encoded secret:"), 0, ++row, 1, 1)
-    root.add(base32encodedSecretTextField, 1, row, 1, 1)
-    root.add(Button("Generate random").apply {
+    root.row(Label("This is the secret that must be used in the generator apps."), rowspan = 1, colspan = 2)
+    root.row(Label("Base32-encoded secret:"), base32encodedSecretTextField)
+    root.row(null, Button("Generate random").apply {
       setOnAction {
         val createRandomSecret = GoogleAuthenticator.createRandomSecret()
         plainTextSecret = Base32().decode(createRandomSecret.toByteArray(StandardCharsets.UTF_8))
@@ -79,21 +86,17 @@ class CodeGeneratorView : View() {
         generateGoogleAuthenticatorCode()
         refreshQrCode()
       }
-    }, 1, ++row, 1, 1)
-    root.add(base32encodedSecretQrCode, 1, ++row, 1, 1)
+    }, rowspan = 1, colspan = 1)
+    root.row(null, base32encodedSecretQrCode)
 
     addSeparator()
-    root.add(Label("Window:"), 0, ++row, 1, 1)
-    root.add(windowSpinner, 1, row, 1, 1)
+    root.row(Label("Window:"), windowSpinner)
     windowSpinner.valueProperty().addListener { _, _, _ ->
       generateGoogleAuthenticatorCode()
       refreshQrCode()
     }
-    root.add(Label("Codes:"), 0, ++row, 1, 1)
-    root.add(codeTextField, 1, row, 1, 1)
-
-    root.add(Label("Code validity:"), 0, ++row, 1, 1)
-    root.add(codeValidityProgressIndicator, 1, row, 1, 1)
+    root.row(Label("Codes:"), codeTextField)
+    root.row(Label("Code validity:"), codeValidityProgressIndicator)
     val codeValidityUpdate = Timeline(KeyFrame(Duration.seconds(1.0), {
       generateGoogleAuthenticatorCode()
     }))
@@ -152,3 +155,4 @@ class CodeGeneratorView : View() {
 
 fun String.hexStringToByteArray(): ByteArray = ByteArray(length / 2) { substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 fun ByteArray.toHex() = joinToString(separator = " ") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
+
