@@ -15,9 +15,7 @@ class RandomSecretGenerator {
    * @param hmacAlgorithm the HMAC algorithm from that the number of bytes is
    *                      taken.
    */
-  fun createRandomSecret(hmacAlgorithm: HmacAlgorithm): ByteArray {
-    return createRandomSecret(hmacAlgorithm.hashBytes)
-  }
+  fun createRandomSecret(hmacAlgorithm: HmacAlgorithm): ByteArray = createRandomSecret(hmacAlgorithm.hashBytes)
 
   /**
    * Generates a secure random secret with variable length.
