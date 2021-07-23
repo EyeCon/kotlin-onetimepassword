@@ -35,6 +35,7 @@ class CodeGeneratorView : View() {
   private val base32encodedSecretQrCode = Canvas(QR_CODE_SIZE.toDouble(), QR_CODE_SIZE.toDouble())
   private val codeTextField = TextField().apply { isEditable = false }
   private val codeValidityProgressIndicator = ProgressBar(0.0)
+  private val windowSpinner = Spinner<Int>(0, 10, 1)
 
   // -- Initialization ---------------------------------------------------------------------------------------------- //
 
@@ -82,7 +83,12 @@ class CodeGeneratorView : View() {
     root.add(base32encodedSecretQrCode, 1, ++row, 1, 1)
 
     addSeparator()
-
+    root.add(Label("Window:"), 0, ++row, 1, 1)
+    root.add(windowSpinner, 1, row, 1, 1)
+    windowSpinner.valueProperty().addListener { _, _, _ ->
+      generateGoogleAuthenticatorCode()
+      refreshQrCode()
+    }
     root.add(Label("Codes:"), 0, ++row, 1, 1)
     root.add(codeTextField, 1, row, 1, 1)
 
@@ -107,7 +113,7 @@ class CodeGeneratorView : View() {
     base32encodedSecretTextField.text = base32secret
 
     val googleAuthenticator = GoogleAuthenticator(base32secret)
-    codeTextField.text = googleAuthenticator.generateWindow().joinToString()
+    codeTextField.text = googleAuthenticator.generateWindow(windowSize = windowSpinner.value).joinToString()
 
     val second = (LocalDateTime.now().second) % 30
     codeValidityProgressIndicator.progress = 1.0 - (second / 30.0)
