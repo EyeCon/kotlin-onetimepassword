@@ -70,13 +70,13 @@ class CodeGeneratorView : View() {
 
     val addSeparator : () -> Separator = {
       val separator = Separator()
-      root.row(separator, colspan = 2, rowspan = 1)
+      root.row(separator, colspan = 2)
       GridPane.setMargin(separator, Insets(8.0, 0.0, 8.0, 0.0))
       separator
     }
     addSeparator()
 
-    root.row(Label("This is the secret that must be used in the generator apps."), rowspan = 1, colspan = 2)
+    root.row(Label("This is the secret that must be used in the generator apps."), colspan = 2)
     root.row(Label("Base32-encoded secret:"), base32encodedSecretTextField)
     root.row(null, Button("Generate random").apply {
       setOnAction {
@@ -86,7 +86,7 @@ class CodeGeneratorView : View() {
         generateGoogleAuthenticatorCode()
         refreshQrCode()
       }
-    }, rowspan = 1, colspan = 1)
+    })
     root.row(null, base32encodedSecretQrCode)
 
     addSeparator()
