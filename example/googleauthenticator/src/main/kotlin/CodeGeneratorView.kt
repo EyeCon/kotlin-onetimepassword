@@ -88,11 +88,11 @@ class CodeGeneratorView : View() {
 
     root.add(Label("Code validity:"), 0, ++row, 1, 1)
     root.add(codeValidityProgressIndicator, 1, row, 1, 1)
-    val codeValidlyUpdate = Timeline(KeyFrame(Duration.seconds(1.0), {
+    val codeValidityUpdate = Timeline(KeyFrame(Duration.seconds(1.0), {
       generateGoogleAuthenticatorCode()
     }))
-    codeValidlyUpdate.cycleCount = Timeline.INDEFINITE
-    codeValidlyUpdate.play()
+    codeValidityUpdate.cycleCount = Timeline.INDEFINITE
+    codeValidityUpdate.play()
 
     // Initial generation
     generateGoogleAuthenticatorCode()
