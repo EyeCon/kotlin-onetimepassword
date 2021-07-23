@@ -30,7 +30,7 @@ class CodeGeneratorView : View() {
 
   private var plainTextSecret = "Secret1234".toByteArray(StandardCharsets.UTF_8)
 
-  private val plainTextSecretTextField = TextField(String(plainTextSecret))
+  private val plainTextSecretTextField = TextField(plainTextSecret.toHex())
   private val base32encodedSecretTextField = TextField().apply { isEditable = false }
   private val base32encodedSecretQrCode = Canvas(QR_CODE_SIZE.toDouble(), QR_CODE_SIZE.toDouble())
   private val codeTextField = TextField().apply { isEditable = false }
@@ -49,7 +49,7 @@ class CodeGeneratorView : View() {
     var row = 0
     root.add(Label("Must have 10 characters to work correctly with most generator apps."), 0, row, 2, 1)
 
-    root.add(Label("Plain text secret:"), 0, ++row, 1, 1)
+    root.add(Label("Plain text secret (in hex):"), 0, ++row, 1, 1)
     root.add(plainTextSecretTextField, 1, row, 1, 1)
     plainTextSecretTextField.textProperty().addListener { _, _, newValue ->
       if (newValue.isBlank()) {
@@ -74,7 +74,7 @@ class CodeGeneratorView : View() {
       setOnAction {
         val createRandomSecret = GoogleAuthenticator.createRandomSecret()
         plainTextSecret = Base32().decode(createRandomSecret.toByteArray(StandardCharsets.UTF_8))
-        plainTextSecretTextField.text = String(plainTextSecret)
+        plainTextSecretTextField.text = plainTextSecret.toHex()
         generateGoogleAuthenticatorCode()
         refreshQrCode()
       }
@@ -143,3 +143,6 @@ class CodeGeneratorView : View() {
 
   // -- Inner Type -------------------------------------------------------------------------------------------------- //
 }
+
+fun String.hexStringToByteArray(): ByteArray = ByteArray(length / 2) { substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+fun ByteArray.toHex() = joinToString(separator = " ") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
