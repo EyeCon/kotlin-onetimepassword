@@ -67,9 +67,18 @@ open class TimeBasedOneTimePasswordGenerator(private val secret: ByteArray, priv
    */
   fun generate(timestamp: Long = System.currentTimeMillis()): String =
     hmacOneTimePasswordGenerator.generate(counter(timestamp))
+  fun generateWindow(windowSize: Int = 1, timestamp: Long = System.currentTimeMillis()): List<String> =
+    (-windowSize..windowSize).map { hmacOneTimePasswordGenerator.generate(it.toLong() + counter(timestamp)) }
 
-  fun generate(date: Date = Date(System.currentTimeMillis())):String = generate(date.time)
-  fun generate(instant: Instant = Instant.now()):String = generate(instant.toEpochMilli())
+  fun generate(date: Date = Date(System.currentTimeMillis())): String =
+    generate(date.time)
+  fun generateWindow(windowSize: Int = 1, date: Date = Date(System.currentTimeMillis())): List<String> =
+    generateWindow(windowSize, date.time)
+
+  fun generate(instant: Instant = Instant.now()): String =
+    generate(instant.toEpochMilli())
+  fun generateWindow(windowSize: Int = 1, instant: Instant = Instant.now()): List<String> =
+    generateWindow(windowSize, instant.toEpochMilli())
 
   /**
    * Validates the given code.

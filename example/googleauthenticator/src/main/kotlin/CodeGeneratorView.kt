@@ -85,7 +85,7 @@ class CodeGeneratorView : View() {
 
     addSeparator()
 
-    root.add(Label("Code:"), 0, ++row, 1, 1)
+    root.add(Label("Codes:"), 0, ++row, 1, 1)
     root.add(codeTextField, 1, row, 1, 1)
 
     root.add(Label("Code validity:"), 0, ++row, 1, 1)
@@ -109,7 +109,7 @@ class CodeGeneratorView : View() {
     base32encodedSecretTextField.text = base32secret
 
     val googleAuthenticator = GoogleAuthenticator(base32secret)
-    codeTextField.text = googleAuthenticator.generate()
+    codeTextField.text = googleAuthenticator.generateWindow().joinToString()
 
     val second = (LocalDateTime.now().second) % 30
     codeValidlyIndicator.progress = 1.0 - (second / 30.0)
