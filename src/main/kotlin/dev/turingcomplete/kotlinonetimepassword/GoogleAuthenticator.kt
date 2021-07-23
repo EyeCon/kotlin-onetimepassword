@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 class GoogleAuthenticator(base32secret: String, private val windowSize: Int = 1) {
     private val hmacAlgorithm = HmacAlgorithm.SHA1
     private val config = TimeBasedOneTimePasswordConfig(30, TimeUnit.SECONDS, 6, hmacAlgorithm)
-    private val timeBasedOneTimePasswordGenerator: TimeBasedOneTimePasswordGenerator = TimeBasedOneTimePasswordGenerator(Base32().decode(base32secret), config)
+    private val timeBasedOneTimePasswordGenerator = TimeBasedOneTimePasswordGenerator(Base32().decode(base32secret), config)
 
 
     /**
