@@ -87,10 +87,10 @@ open class TimeBasedOneTimePasswordGenerator(private val secret: ByteArray, priv
    * @param timestamp the used challenge for the code. The default value is the
    *                  current system time from [System.currentTimeMillis].
    */
-  fun isValid(code: String, timestamp: Long = System.currentTimeMillis()): Boolean {
-    return code == generate(timestamp)
+  fun isValid(code: String, windowSize: Int = 1, timestamp: Long = System.currentTimeMillis()): Boolean {
+    return code in generateWindow(windowSize, timestamp)
   }
 
-  fun isValid(code: String, date: Date = Date(System.currentTimeMillis())) = isValid(code, date.time)
-  fun isValid(code: String, instant: Instant = Instant.now()) = isValid(code, instant.toEpochMilli())
+  fun isValid(code: String, date: Date = Date(System.currentTimeMillis())) = isValid(code, timestamp = date.time)
+  fun isValid(code: String, instant: Instant = Instant.now()) = isValid(code, timestamp = instant.toEpochMilli())
 }
