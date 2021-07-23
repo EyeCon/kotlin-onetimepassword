@@ -5,8 +5,6 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
-import javafx.event.ActionEvent
-import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
@@ -36,7 +34,7 @@ class CodeGeneratorView : View() {
   private val base32encodedSecretTextField = TextField().apply { isEditable = false }
   private val base32encodedSecretQrCode = Canvas(QR_CODE_SIZE.toDouble(), QR_CODE_SIZE.toDouble())
   private val codeTextField = TextField().apply { isEditable = false }
-  private val codeValidlyIndicator = ProgressBar(0.0)
+  private val codeValidityProgressIndicator = ProgressBar(0.0)
 
   // -- Initialization ---------------------------------------------------------------------------------------------- //
 
@@ -89,7 +87,7 @@ class CodeGeneratorView : View() {
     root.add(codeTextField, 1, row, 1, 1)
 
     root.add(Label("Code validity:"), 0, ++row, 1, 1)
-    root.add(codeValidlyIndicator, 1, row, 1, 1)
+    root.add(codeValidityProgressIndicator, 1, row, 1, 1)
     val codeValidlyUpdate = Timeline(KeyFrame(Duration.seconds(1.0), {
       generateGoogleAuthenticatorCode()
     }))
@@ -112,7 +110,7 @@ class CodeGeneratorView : View() {
     codeTextField.text = googleAuthenticator.generateWindow().joinToString()
 
     val second = (LocalDateTime.now().second) % 30
-    codeValidlyIndicator.progress = 1.0 - (second / 30.0)
+    codeValidityProgressIndicator.progress = 1.0 - (second / 30.0)
   }
 
   private fun refreshQrCode() {
